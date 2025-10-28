@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti";
 import "./LogisticsManagerRegistration.css";
 
 export default function LogisticsManagerRegistration() {
@@ -17,13 +18,15 @@ export default function LogisticsManagerRegistration() {
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
+  //  Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedForm = { ...formData, [name]: value };
     setFormData(updatedForm);
 
-    // ✅ Validate form fields
+    // Validate form fields
     const allFieldsFilled = Object.values(updatedForm).every(
       (field) => field.trim() !== ""
     );
@@ -41,12 +44,26 @@ export default function LogisticsManagerRegistration() {
     console.log("Manager Registration Data:", formData);
     localStorage.setItem("managerData", JSON.stringify(formData));
 
-    // Redirect to dashboard (or confirmation page)
-    navigate("/dashboard/manager");
+    setShowConfetti(true);
+
+    setTimeout(() => {
+      setShowConfetti(false);
+      navigate("/dashboard/manager");
+    }, 3000); 
   };
 
   return (
     <div className="manager-register-container">
+      {/*  Confetti display */}
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          numberOfPieces={400}
+          gravity={0.3}
+        />
+      )}
+
       <div className="register-card">
         <h2 className="register-title">Logistics Manager Registration</h2>
         <p className="register-subtitle">
@@ -154,7 +171,7 @@ export default function LogisticsManagerRegistration() {
             type="submit"
             className={`register-btn ${isFormValid ? "active" : ""}`}
           >
-            Create Manager Account
+            Continue as Manager
           </button>
 
           <p className="signin-text">
