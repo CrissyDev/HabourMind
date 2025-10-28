@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import {
   FaMapMarkerAlt,
   FaBolt,
@@ -13,7 +13,7 @@ import ship from "./asessts/pexels-pixabay-68737.jpg";
 import logo from "./asessts/HabourMind Logo.png";
 import GetStartedPage from "./GetStartedPage";
 import TruckDriverPage from "./TruckDriverPage";
-
+import DriverDashboard from "./DriverDashboard";
 
 function Counter({ target, duration, suffix = "" }) {
   const [count, setCount] = useState(0);
@@ -196,11 +196,13 @@ function SignIn() {
   );
 }
 
+function LayoutWithNavbar() {
+  const location = useLocation();
+  const hideNavbar = location.pathname === "/dashboard/driver";
 
-function App() {
   return (
-    <Router>
-      <div className="app">
+    <div className="app">
+      {!hideNavbar && (
         <nav className="navbar fixed-nav">
           <div className="nav-left">
             <img src={logo} alt="HarborMind Logo" className="logo" />
@@ -211,14 +213,22 @@ function App() {
             <Link to="/get-started"><button className="get-started">Get Started</button></Link>
           </div>
         </nav>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/get-started" element={<GetStartedPage />} />
-          <Route path="/truck-driver" element={<TruckDriverPage />} />
+      )}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/get-started" element={<GetStartedPage />} />
+        <Route path="/truck-driver" element={<TruckDriverPage />} />
+        <Route path="/dashboard/driver" element={<DriverDashboard />} />
+      </Routes>
+    </div>
+  );
+}
 
-        </Routes>
-      </div>
+function App() {
+  return (
+    <Router>
+      <LayoutWithNavbar />
     </Router>
   );
 }

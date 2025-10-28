@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(to bottom right, #0d1117, #aeb3c2);
+  background-color: #ffffff;
   font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
@@ -8,12 +8,13 @@ body {
 .driver-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; 
+  align-items: flex-start;
   min-height: 100vh;
-  padding-top: 6rem; 
-  padding-bottom: 3rem; 
+  padding-top: 6rem;
+  padding-bottom: 3rem;
   box-sizing: border-box;
-  overflow-y: auto; 
+  overflow-y: auto;
+  background-color: #ffffff;
 }
 
 .driver-form-card {

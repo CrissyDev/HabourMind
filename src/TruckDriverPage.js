@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti";
 import "./TruckDriverPage.css";
 
 export default function TruckDriverPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -14,8 +17,9 @@ export default function TruckDriverPage() {
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
-  // ✅ Define validateForm with useCallback to fix ESLint dependency warning
+  // ✅ Validation logic
   const validateForm = useCallback(() => {
     const newErrors = {};
 
@@ -37,7 +41,6 @@ export default function TruckDriverPage() {
     setIsValid(Object.keys(newErrors).length === 0);
   }, [form]);
 
-  // ✅ Automatically validate form when input changes
   useEffect(() => {
     validateForm();
   }, [form, validateForm]);
@@ -52,12 +55,19 @@ export default function TruckDriverPage() {
     validateForm();
 
     if (!isValid) return;
-    alert("🎉 Driver account created successfully!");
-    console.log("Driver details:", form);
+
+    // 🎈 Trigger confetti and success message
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+      alert("🎉 Driver account created successfully!");
+      navigate("/dashboard/driver");
+    }, 3000);
   };
 
   return (
     <div className="driver-container">
+      {showConfetti && <Confetti recycle={false} numberOfPieces={300} />}
       <div className="driver-form-card">
         <h2>Truck Driver Registration</h2>
         <p className="subtitle">
@@ -146,7 +156,9 @@ export default function TruckDriverPage() {
               value={form.confirmPassword}
               onChange={handleChange}
             />
-            {errors.confirmPassword && <small>{errors.confirmPassword}</small>}
+            {errors.confirmPassword && (
+              <small>{errors.confirmPassword}</small>
+            )}
           </div>
 
           <button
