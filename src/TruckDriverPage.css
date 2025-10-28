@@ -12,6 +12,8 @@ body {
   min-height: 100vh;
   padding-top: 6rem;
   padding-bottom: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   box-sizing: border-box;
   overflow-y: auto;
   background-color: #ffffff;
@@ -22,7 +24,8 @@ body {
   color: #fff;
   padding: 2.5rem;
   border-radius: 12px;
-  width: 420px;
+  width: 100%;
+  max-width: 420px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
@@ -91,4 +94,71 @@ small {
 
 .submit-btn.active:hover {
   background-color: #0056b3;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  .driver-container {
+    padding-top: 5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    align-items: center;
+  }
+
+  .driver-form-card {
+    padding: 2rem;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .driver-form-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .driver-container {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+  }
+
+  .driver-form-card {
+    padding: 1.5rem;
+    border-radius: 10px;
+  }
+
+  .driver-form-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.8rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+
+  input {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  small {
+    font-size: 0.75rem;
+  }
 }

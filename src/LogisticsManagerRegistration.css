@@ -2,9 +2,13 @@
   display: flex;
   justify-content: center;
   align-items: flex-start; 
-  height: 100vh;
+  min-height: 100vh;
   background: #ffffff; 
-  padding-top: 80px; 
+  padding-top: 80px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 2rem;
+  box-sizing: border-box;
 }
 
 .register-card {
@@ -12,7 +16,8 @@
   color: white;
   padding: 40px;
   border-radius: 15px;
-  width: 420px;
+  width: 100%;
+  max-width: 420px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
@@ -92,4 +97,71 @@
 
 .signin-link:hover {
   text-decoration: underline;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  .manager-register-container {
+    padding-top: 6rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    align-items: center;
+  }
+
+  .register-card {
+    padding: 2.5rem;
+    max-width: 100%;
+  }
+
+  .register-title {
+    font-size: 1.4rem;
+  }
+
+  .register-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .manager-register-container {
+    padding-top: 5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .register-card {
+    padding: 2rem;
+    border-radius: 12px;
+  }
+
+  .register-title {
+    font-size: 1.3rem;
+  }
+
+  .register-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+  }
+
+  .register-form .form-group {
+    margin-bottom: 15px;
+  }
+
+  .register-form label {
+    font-size: 0.9rem;
+  }
+
+  .register-form input {
+    padding: 9px 12px;
+    font-size: 0.9rem;
+  }
+
+  .register-btn {
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+
+  .signin-text {
+    font-size: 0.9rem;
+    margin-top: 15px;
+  }
 }

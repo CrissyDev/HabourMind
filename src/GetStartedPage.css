@@ -3,6 +3,7 @@
   padding: 4rem 2rem;
   background: #f8faff;
   min-height: 100vh;
+  padding-top: 6rem; /* Account for fixed navbar */
 }
 
 .page-title {
@@ -18,14 +19,14 @@
   margin-bottom: 3rem;
 }
 
-/* 2x2 layout for roles */
+/* Responsive grid layout for roles */
 .roles-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   justify-content: center;
   align-items: stretch;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto 3rem auto;
 }
 
@@ -100,4 +101,99 @@
 .back-btn:hover {
   background: #003366;
   color: #fff;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1024px) {
+  .roles-grid {
+    max-width: 900px;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .get-started-page {
+    padding: 3rem 1.5rem;
+    padding-top: 5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .roles-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 500px;
+  }
+
+  .role-card {
+    margin: 0 auto;
+  }
+
+  .role-header {
+    padding: 1.2rem;
+  }
+
+  .role-icon {
+    font-size: 1.8rem;
+  }
+
+  .feature-list {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .get-started-page {
+    padding: 2rem 1rem;
+    padding-top: 4.5rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .roles-grid {
+    max-width: 100%;
+  }
+
+  .role-card {
+    border-radius: 12px;
+  }
+
+  .role-header {
+    padding: 1rem;
+  }
+
+  .role-description {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .feature-list {
+    padding: 0 1.2rem;
+  }
+
+  .feature-list li {
+    font-size: 0.85rem;
+  }
+
+  .continue-btn {
+    padding: 0.7rem 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .back-btn {
+    padding: 0.6rem 1.2rem;
+  }
 }
