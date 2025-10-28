@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./DriverDashboard.css";
 import logo from "./asessts/HabourMind Logo.png";
+import { 
+  FaTruck, 
+  FaGasPump, 
+  FaChartLine, 
+  FaMapMarkerAlt, 
+  FaRoute,
+  FaRobot,
+  FaClock,
+  FaExclamationTriangle
+} from "react-icons/fa";
 
 export default function DriverDashboard() {
   const [driverData, setDriverData] = useState({
@@ -125,23 +135,40 @@ export default function DriverDashboard() {
           <div className="cards-container">
             <div className="dashboard-card white-card small-card">
               <div className="card-header">
-                <h3>Truck ID</h3>
+                <div className="card-title-section">
+                  <FaTruck className="card-icon" />
+                  <h3>Truck ID</h3>
+                </div>
                 <span className="rating">⭐ 4.8</span>
               </div>
               <h2 className="card-value">{driverData.vehicleReg || "N/A"}</h2>
-              <p className="card-status ready">Ready for Dispatch</p>
+              <p className="card-status ready">
+                <span className="status-dot ready"></span>
+                Ready for Dispatch
+              </p>
             </div>
 
             <div className="dashboard-card white-card small-card">
-              <h3>Fuel Level</h3>
+              <div className="card-header">
+                <div className="card-title-section">
+                  <FaGasPump className="card-icon fuel-icon" />
+                  <h3>Fuel Level</h3>
+                </div>
+              </div>
               <h2 className="card-value">78%</h2>
               <div className="progress-bar">
                 <div className="progress fuel" style={{ width: "78%" }}></div>
               </div>
+              <p className="card-status">Good level</p>
             </div>
 
             <div className="dashboard-card white-card small-card">
-              <h3>Efficiency Score</h3>
+              <div className="card-header">
+                <div className="card-title-section">
+                  <FaChartLine className="card-icon efficiency-icon" />
+                  <h3>Efficiency Score</h3>
+                </div>
+              </div>
               <h2 className="card-value">87%</h2>
               <div className="progress-bar">
                 <div
@@ -149,12 +176,16 @@ export default function DriverDashboard() {
                   style={{ width: "87%" }}
                 ></div>
               </div>
+              <p className="card-status excellent">Excellent performance</p>
             </div>
           </div>
 
           {/* === PLAN TRIP === */}
           <div className="plan-trip-card">
-            <h2 className="plan-title">Plan Your Trip</h2>
+            <h2 className="plan-title">
+              <FaRoute className="section-icon" />
+              Plan Your Trip
+            </h2>
             <form onSubmit={handleSubmit} className="trip-form">
               <div className="trip-row">
                 <div className="trip-input">
@@ -214,29 +245,44 @@ export default function DriverDashboard() {
 
           {aiData && (
             <div className="ai-recommendations">
-              <h2 className="ai-title">AI Recommendations</h2>
+              <h2 className="ai-title">
+                <FaRobot className="section-icon" />
+                AI Recommendations
+              </h2>
 
               <div className="ai-cards-grid">
                 <div className="ai-card">
-                  <h4>Optimal Departure Time</h4>
+                  <div className="ai-card-header">
+                    <FaClock className="ai-card-icon" />
+                    <h4>Optimal Departure Time</h4>
+                  </div>
                   <h2>{aiData.departureTime}</h2>
                   <p>{aiData.departureMessage}</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Delay Probability</h4>
+                  <div className="ai-card-header">
+                    <FaExclamationTriangle className="ai-card-icon warning" />
+                    <h4>Delay Probability</h4>
+                  </div>
                   <h2 className="orange">{aiData.delayProbability}</h2>
                   <p>{aiData.delayMessage}</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Estimated Fuel Savings</h4>
+                  <div className="ai-card-header">
+                    <FaGasPump className="ai-card-icon success" />
+                    <h4>Estimated Fuel Savings</h4>
+                  </div>
                   <h2 className="green">{aiData.fuelSavings}</h2>
                   <p>By following recommended route</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Recommended Route</h4>
+                  <div className="ai-card-header">
+                    <FaMapMarkerAlt className="ai-card-icon" />
+                    <h4>Recommended Route</h4>
+                  </div>
                   <h3>
                     <strong>{aiData.route}</strong>
                   </h3>
