@@ -352,6 +352,160 @@
 .recommend-btn:active {
   transform: translateY(0);
 }
+
+.recommend-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 1px solid #f87171;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.full-recommendation {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.full-recommendation h3 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.recommendation-text {
+  color: #000;
+  line-height: 1.6;
+}
+
+.recommendation-text p {
+  margin-bottom: 0.5rem;
+}
+
+/* === MARKDOWN STYLING === */
+.recommendation-text h3 {
+  color: #0d1b3d;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem 0;
+  border-bottom: 2px solid rgba(13, 27, 61, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.recommendation-text h4 {
+  color: #374151;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1.2rem 0 0.8rem 0;
+}
+
+.recommendation-text ul {
+  margin: 0.8rem 0;
+  padding-left: 1.5rem;
+}
+
+.recommendation-text li {
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.recommendation-text strong {
+  color: #0d1b3d;
+  font-weight: 700;
+}
+
+.recommendation-text hr {
+  border: none;
+  border-top: 1px solid rgba(13, 27, 61, 0.2);
+  margin: 1.5rem 0;
+}
+
+.recommendation-text blockquote {
+  border-left: 3px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Chat message markdown styling */
+.ai-message.bot h3 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0.8rem 0 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.3rem;
+}
+
+.ai-message.bot h4 {
+  color: #e8eaff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.8rem 0 0.5rem 0;
+}
+
+.ai-message.bot ul {
+  margin: 0.6rem 0;
+  padding-left: 1.2rem;
+}
+
+.ai-message.bot li {
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+.ai-message.bot strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.ai-message.bot p {
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.ai-message.bot hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 1rem 0;
+}
+
+.ai-message.bot blockquote {
+  border-left: 2px solid #8b5cf6;
+  padding-left: 0.8rem;
+  margin: 0.8rem 0;
+  font-style: italic;
+  color: #c3c7e0;
+}
 /* === AI RECOMMENDATIONS SECTION === */
 .ai-recommendations {
   margin-top: 3rem;
@@ -536,14 +690,44 @@
   margin-bottom: 20px;
 }
 
+.ai-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .ai-header h1 {
   font-size: 2rem;
   font-weight: 700;
+  margin: 0;
 }
 
 .ai-header p {
   color: #b8bedc;
   font-size: 1.1rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.clear-chat-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.clear-chat-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
 }
 
 .ai-chat-window {
@@ -652,6 +836,27 @@
   font-size: 1.2rem;
 }
 
+.ai-message.loading {
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.loading-dots {
+  display: inline-block;
+  width: 20px;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 50%, #8b5cf6 100%);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  animation: loadingDots 1.5s ease-in-out infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes loadingDots {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .ai-input-area {
   display: flex;
   background: rgba(15, 20, 48, 0.8);
@@ -673,6 +878,11 @@
   transition: all 0.3s ease;
 }
 
+.ai-input-area input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .ai-input-area input::placeholder {
   color: #7f86b3;
 }
@@ -692,6 +902,12 @@
 .ai-input-area button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.ai-input-area button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* === RESPONSIVE DESIGN === */

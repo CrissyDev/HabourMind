@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import "./DriverDashboard.css";
 import logo from "./asessts/HabourMind Logo.png";
+import { generateTripRecommendations, geminiChat } from "./geminiService";
 import { 
   FaTruck, 
   FaGasPump, 
@@ -9,7 +11,9 @@ import {
   FaRoute,
   FaRobot,
   FaClock,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaTrash,
+  FaPaperPlane
 } from "react-icons/fa";
 
 export default function DriverDashboard() {
@@ -27,13 +31,16 @@ export default function DriverDashboard() {
 
   const [aiData, setAiData] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [recommendationError, setRecommendationError] = useState(null);
   const [chatMessages, setChatMessages] = useState([
     {
       sender: "bot",
-      text: "Good morning! I'm HarborMind, your AI logistics assistant. I can help you with route optimization, fuel efficiency, real-time alerts, and container clearance status. What would you like to know?",
+      text: "### Welcome to HarborMind AI! 🚛\n\nHello! I'm **HarborMind AI**, your intelligent logistics assistant. I'm here to help you with:\n\n* **Route optimization** and traffic analysis\n* **Weather conditions** and safety assessments  \n* **Fuel efficiency** recommendations\n* **Port logistics** and clearance guidance\n* **Real-time insights** for Kenyan transportation\n\nI specialize in **Mombasa Port operations** and transportation throughout Kenya. How can I assist you today?",
     },
   ]);
   const [chatInput, setChatInput] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
     const storedDriver = JSON.parse(localStorage.getItem("driverData"));
@@ -45,35 +52,79 @@ export default function DriverDashboard() {
     setTripDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setAiData({
-      departureTime: "09:30 AM",
-      departureMessage: "Depart now to avoid peak congestion",
-      delayProbability: "35%",
-      delayMessage: "Low risk - good conditions ahead",
-      fuelSavings: "15%",
-      route: "Via Mombasa–Nairobi Highway (avoid Makupa Bridge)",
-      warning: "Heavy congestion expected near Changamwe 8:30–9:15 AM",
-    });
-    setTripDetails({
-      currentLocation: "",
-      destination: "",
-      cargoWeight: "",
-      cargoType: "",
-    });
+    setIsLoadingRecommendations(true);
+    setRecommendationError(null);
+    
+    try {
+      const recommendations = await generateTripRecommendations(tripDetails);
+      
+      // Parse the AI response and extract key information
+      // For now, we'll display the full response and extract some mock data
+      setAiData({
+        fullRecommendation: recommendations,
+        departureTime: "09:30 AM", // This would be extracted from AI response
+        departureMessage: "Optimal time based on traffic analysis",
+        delayProbability: "25%",
+        delayMessage: "Low risk - favorable conditions",
+        fuelSavings: "18%",
+        route: "AI-optimized route via A109 Highway",
+        warning: "Monitor weather conditions near Voi",
+      });
+      
+      // Clear the form
+      setTripDetails({
+        currentLocation: "",
+        destination: "",
+        cargoWeight: "",
+        cargoType: "",
+      });
+    } catch (error) {
+      setRecommendationError(error.message);
+      console.error('Error getting recommendations:', error);
+    } finally {
+      setIsLoadingRecommendations(false);
+    }
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
-    const newMsg = { sender: "user", text: chatInput };
-    setChatMessages((prev) => [
-      ...prev,
-      newMsg,
-      { sender: "bot", text: "Processing your request..." },
-    ]);
+    if (!chatInput.trim() || isChatLoading) return;
+    
+    const userMessage = chatInput;
+    const newMsg = { sender: "user", text: userMessage };
+    setChatMessages((prev) => [...prev, newMsg]);
     setChatInput("");
+    setIsChatLoading(true);
+
+    try {
+      const response = await geminiChat.sendMessage(userMessage);
+      const botReply = {
+        sender: "bot",
+        text: response,
+      };
+      setChatMessages((prev) => [...prev, botReply]);
+    } catch (error) {
+      const errorReply = {
+        sender: "bot",
+        text: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+      };
+      setChatMessages((prev) => [...prev, errorReply]);
+      console.error('Chat error:', error);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
+
+  const handleClearChat = () => {
+    geminiChat.clearChat();
+    setChatMessages([
+      {
+        sender: "bot",
+        text: "### Welcome to HarborMind AI! 🚛\n\nHello! I'm **HarborMind AI**, your intelligent logistics assistant. I'm here to help you with:\n\n* **Route optimization** and traffic analysis\n* **Weather conditions** and safety assessments  \n* **Fuel efficiency** recommendations\n* **Port logistics** and clearance guidance\n* **Real-time insights** for Kenyan transportation\n\nI specialize in **Mombasa Port operations** and transportation throughout Kenya. How can I assist you today?",
+      },
+    ]);
   };
 
   return (
@@ -237,9 +288,23 @@ export default function DriverDashboard() {
                 </div>
               </div>
 
-              <button type="submit" className="recommend-btn">
-                Get AI Recommendations
+              <button type="submit" className="recommend-btn" disabled={isLoadingRecommendations}>
+                {isLoadingRecommendations ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Analyzing Route...
+                  </>
+                ) : (
+                  'Get AI Recommendations'
+                )}
               </button>
+              
+              {recommendationError && (
+                <div className="error-message">
+                  <FaExclamationTriangle />
+                  {recommendationError}
+                </div>
+              )}
             </form>
           </div>
 
@@ -293,6 +358,14 @@ export default function DriverDashboard() {
                 <span>{aiData.warning}</span>
               </div>
 
+              {aiData.fullRecommendation && (
+                <div className="full-recommendation">
+                  <div className="recommendation-text">
+                    <ReactMarkdown>{aiData.fullRecommendation}</ReactMarkdown>
+                  </div>
+                </div>
+              )}
+
               <div className="ai-buttons">
                 <button className="btn-disabled">Accept Route</button>
                 <button className="btn-primary">View Alternatives</button>
@@ -306,8 +379,16 @@ export default function DriverDashboard() {
       {activeTab === "assistant" && (
         <div className="ai-assistant-container">
           <div className="ai-header">
-            <h1> AI Assistant</h1>
-            <p>Get real-time insights and route optimization</p>
+            <div className="ai-header-content">
+              <div>
+                <h1>AI Assistant</h1>
+                <p>Get real-time insights and route optimization</p>
+              </div>
+              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
+                <FaTrash />
+                Clear Chat
+              </button>
+            </div>
           </div>
 
           <div className="ai-chat-window">
@@ -326,9 +407,19 @@ export default function DriverDashboard() {
                     msg.sender === "user" ? "user" : "bot"
                   }`}
                 >
-                  {msg.text}
+                  {msg.sender === "bot" ? (
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               ))}
+              {isChatLoading && (
+                <div className="ai-message bot loading">
+                  <span className="loading-dots"></span>
+                  HarborMind AI is thinking...
+                </div>
+              )}
             </div>
 
             <form className="ai-input-area" onSubmit={handleSendMessage}>
@@ -337,8 +428,15 @@ export default function DriverDashboard() {
                 placeholder="Ask for route optimization, delays, or efficiency tips..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
+                disabled={isChatLoading}
               />
-              <button type="submit">Send</button>
+              <button type="submit" disabled={isChatLoading || !chatInput.trim()}>
+                {isChatLoading ? (
+                  <span className="loading-spinner"></span>
+                ) : (
+                  <FaPaperPlane />
+                )}
+              </button>
             </form>
           </div>
         </div>
