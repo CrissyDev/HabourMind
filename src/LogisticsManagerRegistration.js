@@ -1,3 +1,4 @@
+// src/components/LogisticsManagerRegistration.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Confetti from "react-confetti";
@@ -20,41 +21,41 @@ export default function LogisticsManagerRegistration() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  //  Handle input changes
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedForm = { ...formData, [name]: value };
     setFormData(updatedForm);
 
-    // Validate form fields
-    const allFieldsFilled = Object.values(updatedForm).every(
+    // Validation
+    const allFilled = Object.values(updatedForm).every(
       (field) => field.trim() !== ""
     );
     const passwordsMatch =
       updatedForm.password === updatedForm.confirmPassword &&
       updatedForm.password.length >= 4;
 
-    setIsFormValid(allFieldsFilled && passwordsMatch);
+    setIsFormValid(allFilled && passwordsMatch);
   };
 
+  // Submit registration
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isFormValid) return;
 
-    console.log("Manager Registration Data:", formData);
+    // Save to localStorage
     localStorage.setItem("managerData", JSON.stringify(formData));
 
+    // Show confetti, then redirect
     setShowConfetti(true);
-
     setTimeout(() => {
       setShowConfetti(false);
-      navigate("/dashboard/manager");
-    }, 3000); 
+      navigate("/logistics-dashboard");
+    }, 3000);
   };
 
   return (
     <div className="manager-register-container">
-      {/*  Confetti display */}
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
