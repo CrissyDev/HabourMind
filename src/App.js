@@ -14,6 +14,8 @@ import logo from "./asessts/HabourMind Logo.png";
 import GetStartedPage from "./GetStartedPage";
 import TruckDriverPage from "./TruckDriverPage";
 import DriverDashboard from "./DriverDashboard";
+import LogisticsManagerRegistration from "./LogisticsManagerRegistration";
+
 
 function Counter({ target, duration, suffix = "" }) {
   const [count, setCount] = useState(0);
@@ -220,6 +222,8 @@ function LayoutWithNavbar() {
         <Route path="/get-started" element={<GetStartedPage />} />
         <Route path="/truck-driver" element={<TruckDriverPage />} />
         <Route path="/dashboard/driver" element={<DriverDashboard />} />
+        <Route path="/logistics-manager" element={<LogisticsManagerRegistration />} />
+
       </Routes>
     </div>
   );
