@@ -1,0 +1,93 @@
+body {
+  background: linear-gradient(to bottom right, #0d1117, #aeb3c2);
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.driver-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  min-height: 100vh;
+  padding-top: 6rem; 
+  padding-bottom: 3rem; 
+  box-sizing: border-box;
+  overflow-y: auto; 
+}
+
+.driver-form-card {
+  background-color: #0f1430;
+  color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.driver-form-card h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.subtitle {
+  color: #a1a1a1;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+input {
+  padding: 0.7rem;
+  border: 1px solid #3b4263;
+  border-radius: 6px;
+  background-color: #252b52;
+  color: #fff;
+  outline: none;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+small {
+  color: lightblue;
+  margin-top: 4px;
+  font-size: 0.8rem;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #2e3a66;
+  color: #bbb;
+  font-weight: 600;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.submit-btn.active {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.submit-btn.active:hover {
+  background-color: #0056b3;
+}

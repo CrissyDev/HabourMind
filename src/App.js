@@ -11,6 +11,9 @@ import {
 import "./index.css";
 import ship from "./asessts/pexels-pixabay-68737.jpg";
 import logo from "./asessts/HabourMind Logo.png";
+import GetStartedPage from "./GetStartedPage";
+import TruckDriverPage from "./TruckDriverPage";
+
 
 function Counter({ target, duration, suffix = "" }) {
   const [count, setCount] = useState(0);
@@ -193,14 +196,6 @@ function SignIn() {
   );
 }
 
-function GetStarted() {
-  return (
-    <div className="page-content">
-      <h2>Get Started</h2>
-      <p>Join HarborMind and explore how AI can transform logistics efficiency.</p>
-    </div>
-  );
-}
 
 function App() {
   return (
@@ -219,7 +214,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/get-started" element={<GetStartedPage />} />
+          <Route path="/truck-driver" element={<TruckDriverPage />} />
+
         </Routes>
       </div>
     </Router>
