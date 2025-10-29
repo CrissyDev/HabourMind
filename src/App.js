@@ -17,6 +17,8 @@ import GetStartedPage from "./GetStartedPage";
 import TruckDriverPage from "./TruckDriverPage";
 import DriverDashboard from "./DriverDashboard";
 import LogisticsManagerRegistration from "./LogisticsManagerRegistration";
+import LogisticsDashboard from "./LogisticsDashboard";
+
 
 
 function Counter({ target, duration, suffix = "" }) {
@@ -237,6 +239,7 @@ function LayoutWithNavbar() {
         <Route path="/truck-driver" element={<TruckDriverPage />} />
         <Route path="/dashboard/driver" element={<DriverDashboard />} />
         <Route path="/logistics-manager" element={<LogisticsManagerRegistration />} />
+        <Route path="/logistics-dashboard" element={<LogisticsDashboard />} />
 
       </Routes>
     </div>

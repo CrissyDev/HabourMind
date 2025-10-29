@@ -1,0 +1,350 @@
+/* === Main Layout === */
+.logistics-dashboard {
+  min-height: 100vh;
+  background-color: #f9fafc;
+  font-family: "Inter", sans-serif;
+}
+
+/* === Navbar === */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #001f3f; /* ✅ Changed to Navy Blue */
+  padding: 0.8rem 2rem;
+  color: white;
+}
+
+/* Fixed navbar (keeps navy color) */
+.fixed-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #001f3f; /* ✅ Navy Blue */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* === Logo Section === */
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+.navbar-logo {
+  width: 45px;
+  height: auto;
+  margin-right: 8px;
+}
+.logo-text {
+  font-weight: 700;
+  color: #4cc9f0;
+  font-size: 1.2rem;
+}
+
+/* === Navbar Links === */
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #d1d1d1;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.3s, background 0.3s, box-shadow 0.3s;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+/* ✅ Hover and Active Styles */
+.nav-links a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links a.active {
+  color: #ffffff;
+  background: #00b4d8; /* ✅ Bright Cyan to show active tab */
+  box-shadow: 0 2px 8px rgba(0, 180, 216, 0.4);
+  font-weight: 600;
+}
+
+/* === User Section === */
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 600;
+  color: white;
+}
+
+.user-role {
+  font-size: 0.8rem;
+  color: #a1a1a1;
+}
+
+.user-icon {
+  background-color: #2c2c2c;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logout-icon {
+  font-size: 1.2rem;
+  color: #d1d1d1;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.logout-icon:hover {
+  color: #ffffff;
+}
+
+/* === Dashboard Content === */
+.dashboard-content {
+  margin-top: 90px; /* Prevent navbar overlap */
+  padding: 2.5rem;
+}
+
+.dashboard-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0d0d0d;
+  margin-bottom: 0.2rem;
+}
+
+.welcome-text {
+  color: #6a6a6a;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-text span {
+  color: #000;
+  font-weight: 600;
+}
+
+/* === Cards Section === */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.8rem 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  color: #222;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin-top: 0.3rem;
+}
+
+.card-change {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.card-change.positive {
+  color: #00c851;
+}
+
+.card-change.negative {
+  color: #ff4444;
+}
+
+/* === Performance Section === */
+.performance-section {
+  background-color: #0d1330;
+  color: #fff;
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.performance-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #e6e8ff;
+}
+
+.performance-icon {
+  color: #fcd34d;
+  margin-right: 10px;
+  font-size: 1.4rem;
+}
+
+.performance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: #bfc4e2;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  padding: 10px;
+  border: 1px solid #3b4170;
+  border-radius: 6px;
+  background: #141a3b;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.input-group input:focus {
+  border-color: #4cc9f0;
+  outline: none;
+}
+
+/* === Generate Button === */
+.generate-btn {
+  width: 100%;
+  background: #f3f4f6;
+  color: #0d1330;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.generate-btn:hover {
+  background: #4cc9f0;
+  color: white;
+}
+
+.btn-icon {
+  margin-right: 8px;
+}
+
+/* === AI Insights Section === */
+.insights-section {
+  margin-top: 40px;
+  background: #f9f9fc;
+  border-radius: 10px;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.insight-card {
+  background: #161b33;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.insight-card h4 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.insight-text {
+  color: #00c878;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.alert-box {
+  margin-top: 20px;
+  background: #fff6e5;
+  color: #b45f06;
+  border: 1px solid #ffe4b3;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.alert-icon {
+  margin-right: 8px;
+}
+
+/* === Animation === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}
