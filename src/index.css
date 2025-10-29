@@ -1,4 +1,8 @@
 /* === GENERAL STYLES === */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -9,6 +13,81 @@ body {
 
 .app {
   min-height: 100vh;
+}
+
+/* === RESPONSIVE UTILITIES === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .md\:hidden {
+    display: none;
+  }
+  
+  .md\:block {
+    display: block;
+  }
+  
+  .md\:flex {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .sm\:hidden {
+    display: none;
+  }
+  
+  .sm\:block {
+    display: block;
+  }
+  
+  .sm\:text-sm {
+    font-size: 0.875rem;
+  }
 }
 
 /* === FIXED NAVBAR === */
@@ -25,6 +104,21 @@ body {
   padding: 0.9rem 5%;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.nav-right.mobile-hidden {
+  display: none;
 }
 
 .fixed-nav .nav-left {
@@ -89,9 +183,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
   padding: 2rem 8%;
   margin-top: 90px; /* so hero starts below fixed navbar */
+  gap: 2rem;
 }
 
 .hero-text {
@@ -219,15 +314,34 @@ body {
   padding: 80px 20px;
 }
 
+/* === RESPONSIVE BREAKPOINTS === */
+@media (max-width: 1200px) {
+  .hero-container {
+    padding: 2rem 6%;
+    gap: 1.5rem;
+  }
+  
+  .hero-title {
+    font-size: 2.8rem;
+  }
+  
+  .hero-text {
+    padding-right: 20px;
+  }
+}
+
 @media (max-width: 900px) {
   .hero-container {
     flex-direction: column-reverse;
     text-align: center;
     padding: 2rem 5%;
+    height: auto;
+    min-height: calc(100vh - 80px);
   }
 
   .hero-text {
     padding-right: 0;
+    margin-top: 2rem;
   }
 
   .hero-title {
@@ -251,6 +365,125 @@ body {
 
   .stat-box {
     margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed-nav {
+    padding: 0.9rem 3%;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .nav-right {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to right, #002244, #003366);
+    flex-direction: column;
+    padding: 1rem 3%;
+    gap: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-right.mobile-hidden {
+    display: none;
+  }
+  
+  .nav-right button {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  .hero-container {
+    padding: 1.5rem 3%;
+    margin-top: 100px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .start-trial,
+  .watch-demo {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .stats-section {
+    padding: 40px 15px;
+  }
+
+  .features-section {
+    padding: 60px 3%;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .cta-section {
+    padding: 60px 15px;
+    margin-top: 60px;
+  }
+
+  .cta-section h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixed-nav {
+    padding: 0.7rem 2%;
+  }
+
+  .fixed-nav .brand {
+    font-size: 1.2rem;
+  }
+
+  .fixed-nav .logo {
+    width: 35px;
+    height: 35px;
+  }
+
+  .hero-container {
+    padding: 1rem 2%;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .tagline {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  .stat-box h2 {
+    font-size: 1.6rem;
+  }
+
+  .feature-card {
+    padding: 20px 15px;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
   }
 }
 

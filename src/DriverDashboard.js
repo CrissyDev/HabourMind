@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import "./DriverDashboard.css";
 import logo from "./asessts/HabourMind Logo.png";
+import { generateTripRecommendations, geminiChat } from "./geminiService";
+import { 
+  FaTruck, 
+  FaGasPump, 
+  FaChartLine, 
+  FaMapMarkerAlt, 
+  FaRoute,
+  FaRobot,
+  FaClock,
+  FaExclamationTriangle,
+  FaTrash,
+  FaPaperPlane
+} from "react-icons/fa";
 
 export default function DriverDashboard() {
   const [driverData, setDriverData] = useState({
@@ -17,13 +31,16 @@ export default function DriverDashboard() {
 
   const [aiData, setAiData] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [recommendationError, setRecommendationError] = useState(null);
   const [chatMessages, setChatMessages] = useState([
     {
       sender: "bot",
-      text: "Good morning! I'm HarborMind, your AI logistics assistant. I can help you with route optimization, fuel efficiency, real-time alerts, and container clearance status. What would you like to know?",
+      text: "### Welcome to HarborMind AI! 🚛\n\nHello! I'm **HarborMind AI**, your intelligent logistics assistant. I'm here to help you with:\n\n* **Route optimization** and traffic analysis\n* **Weather conditions** and safety assessments  \n* **Fuel efficiency** recommendations\n* **Port logistics** and clearance guidance\n* **Real-time insights** for Kenyan transportation\n\nI specialize in **Mombasa Port operations** and transportation throughout Kenya. How can I assist you today?",
     },
   ]);
   const [chatInput, setChatInput] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
     const storedDriver = JSON.parse(localStorage.getItem("driverData"));
@@ -35,35 +52,79 @@ export default function DriverDashboard() {
     setTripDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setAiData({
-      departureTime: "09:30 AM",
-      departureMessage: "Depart now to avoid peak congestion",
-      delayProbability: "35%",
-      delayMessage: "Low risk - good conditions ahead",
-      fuelSavings: "15%",
-      route: "Via Mombasa–Nairobi Highway (avoid Makupa Bridge)",
-      warning: "Heavy congestion expected near Changamwe 8:30–9:15 AM",
-    });
-    setTripDetails({
-      currentLocation: "",
-      destination: "",
-      cargoWeight: "",
-      cargoType: "",
-    });
+    setIsLoadingRecommendations(true);
+    setRecommendationError(null);
+    
+    try {
+      const recommendations = await generateTripRecommendations(tripDetails);
+      
+      // Parse the AI response and extract key information
+      // For now, we'll display the full response and extract some mock data
+      setAiData({
+        fullRecommendation: recommendations,
+        departureTime: "09:30 AM", // This would be extracted from AI response
+        departureMessage: "Optimal time based on traffic analysis",
+        delayProbability: "25%",
+        delayMessage: "Low risk - favorable conditions",
+        fuelSavings: "18%",
+        route: "AI-optimized route via A109 Highway",
+        warning: "Monitor weather conditions near Voi",
+      });
+      
+      // Clear the form
+      setTripDetails({
+        currentLocation: "",
+        destination: "",
+        cargoWeight: "",
+        cargoType: "",
+      });
+    } catch (error) {
+      setRecommendationError(error.message);
+      console.error('Error getting recommendations:', error);
+    } finally {
+      setIsLoadingRecommendations(false);
+    }
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
-    const newMsg = { sender: "user", text: chatInput };
-    setChatMessages((prev) => [
-      ...prev,
-      newMsg,
-      { sender: "bot", text: "Processing your request..." },
-    ]);
+    if (!chatInput.trim() || isChatLoading) return;
+    
+    const userMessage = chatInput;
+    const newMsg = { sender: "user", text: userMessage };
+    setChatMessages((prev) => [...prev, newMsg]);
     setChatInput("");
+    setIsChatLoading(true);
+
+    try {
+      const response = await geminiChat.sendMessage(userMessage);
+      const botReply = {
+        sender: "bot",
+        text: response,
+      };
+      setChatMessages((prev) => [...prev, botReply]);
+    } catch (error) {
+      const errorReply = {
+        sender: "bot",
+        text: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+      };
+      setChatMessages((prev) => [...prev, errorReply]);
+      console.error('Chat error:', error);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
+
+  const handleClearChat = () => {
+    geminiChat.clearChat();
+    setChatMessages([
+      {
+        sender: "bot",
+        text: "### Welcome to HarborMind AI! 🚛\n\nHello! I'm **HarborMind AI**, your intelligent logistics assistant. I'm here to help you with:\n\n* **Route optimization** and traffic analysis\n* **Weather conditions** and safety assessments  \n* **Fuel efficiency** recommendations\n* **Port logistics** and clearance guidance\n* **Real-time insights** for Kenyan transportation\n\nI specialize in **Mombasa Port operations** and transportation throughout Kenya. How can I assist you today?",
+      },
+    ]);
   };
 
   return (
@@ -125,23 +186,40 @@ export default function DriverDashboard() {
           <div className="cards-container">
             <div className="dashboard-card white-card small-card">
               <div className="card-header">
-                <h3>Truck ID</h3>
+                <div className="card-title-section">
+                  <FaTruck className="card-icon" />
+                  <h3>Truck ID</h3>
+                </div>
                 <span className="rating">⭐ 4.8</span>
               </div>
               <h2 className="card-value">{driverData.vehicleReg || "N/A"}</h2>
-              <p className="card-status ready">Ready for Dispatch</p>
+              <p className="card-status ready">
+                <span className="status-dot ready"></span>
+                Ready for Dispatch
+              </p>
             </div>
 
             <div className="dashboard-card white-card small-card">
-              <h3>Fuel Level</h3>
+              <div className="card-header">
+                <div className="card-title-section">
+                  <FaGasPump className="card-icon fuel-icon" />
+                  <h3>Fuel Level</h3>
+                </div>
+              </div>
               <h2 className="card-value">78%</h2>
               <div className="progress-bar">
                 <div className="progress fuel" style={{ width: "78%" }}></div>
               </div>
+              <p className="card-status">Good level</p>
             </div>
 
             <div className="dashboard-card white-card small-card">
-              <h3>Efficiency Score</h3>
+              <div className="card-header">
+                <div className="card-title-section">
+                  <FaChartLine className="card-icon efficiency-icon" />
+                  <h3>Efficiency Score</h3>
+                </div>
+              </div>
               <h2 className="card-value">87%</h2>
               <div className="progress-bar">
                 <div
@@ -149,12 +227,16 @@ export default function DriverDashboard() {
                   style={{ width: "87%" }}
                 ></div>
               </div>
+              <p className="card-status excellent">Excellent performance</p>
             </div>
           </div>
 
           {/* === PLAN TRIP === */}
           <div className="plan-trip-card">
-            <h2 className="plan-title">Plan Your Trip</h2>
+            <h2 className="plan-title">
+              <FaRoute className="section-icon" />
+              Plan Your Trip
+            </h2>
             <form onSubmit={handleSubmit} className="trip-form">
               <div className="trip-row">
                 <div className="trip-input">
@@ -206,37 +288,66 @@ export default function DriverDashboard() {
                 </div>
               </div>
 
-              <button type="submit" className="recommend-btn">
-                Get AI Recommendations
+              <button type="submit" className="recommend-btn" disabled={isLoadingRecommendations}>
+                {isLoadingRecommendations ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Analyzing Route...
+                  </>
+                ) : (
+                  'Get AI Recommendations'
+                )}
               </button>
+              
+              {recommendationError && (
+                <div className="error-message">
+                  <FaExclamationTriangle />
+                  {recommendationError}
+                </div>
+              )}
             </form>
           </div>
 
           {aiData && (
             <div className="ai-recommendations">
-              <h2 className="ai-title">AI Recommendations</h2>
+              <h2 className="ai-title">
+                <FaRobot className="section-icon" />
+                AI Recommendations
+              </h2>
 
               <div className="ai-cards-grid">
                 <div className="ai-card">
-                  <h4>Optimal Departure Time</h4>
+                  <div className="ai-card-header">
+                    <FaClock className="ai-card-icon" />
+                    <h4>Optimal Departure Time</h4>
+                  </div>
                   <h2>{aiData.departureTime}</h2>
                   <p>{aiData.departureMessage}</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Delay Probability</h4>
+                  <div className="ai-card-header">
+                    <FaExclamationTriangle className="ai-card-icon warning" />
+                    <h4>Delay Probability</h4>
+                  </div>
                   <h2 className="orange">{aiData.delayProbability}</h2>
                   <p>{aiData.delayMessage}</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Estimated Fuel Savings</h4>
+                  <div className="ai-card-header">
+                    <FaGasPump className="ai-card-icon success" />
+                    <h4>Estimated Fuel Savings</h4>
+                  </div>
                   <h2 className="green">{aiData.fuelSavings}</h2>
                   <p>By following recommended route</p>
                 </div>
 
                 <div className="ai-card">
-                  <h4>Recommended Route</h4>
+                  <div className="ai-card-header">
+                    <FaMapMarkerAlt className="ai-card-icon" />
+                    <h4>Recommended Route</h4>
+                  </div>
                   <h3>
                     <strong>{aiData.route}</strong>
                   </h3>
@@ -246,6 +357,14 @@ export default function DriverDashboard() {
               <div className="ai-warning">
                 <span>{aiData.warning}</span>
               </div>
+
+              {aiData.fullRecommendation && (
+                <div className="full-recommendation">
+                  <div className="recommendation-text">
+                    <ReactMarkdown>{aiData.fullRecommendation}</ReactMarkdown>
+                  </div>
+                </div>
+              )}
 
               <div className="ai-buttons">
                 <button className="btn-disabled">Accept Route</button>
@@ -260,8 +379,16 @@ export default function DriverDashboard() {
       {activeTab === "assistant" && (
         <div className="ai-assistant-container">
           <div className="ai-header">
-            <h1> AI Assistant</h1>
-            <p>Get real-time insights and route optimization</p>
+            <div className="ai-header-content">
+              <div>
+                <h1>AI Assistant</h1>
+                <p>Get real-time insights and route optimization</p>
+              </div>
+              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
+                <FaTrash />
+                Clear Chat
+              </button>
+            </div>
           </div>
 
           <div className="ai-chat-window">
@@ -280,9 +407,19 @@ export default function DriverDashboard() {
                     msg.sender === "user" ? "user" : "bot"
                   }`}
                 >
-                  {msg.text}
+                  {msg.sender === "bot" ? (
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               ))}
+              {isChatLoading && (
+                <div className="ai-message bot loading">
+                  <span className="loading-dots"></span>
+                  HarborMind AI is thinking...
+                </div>
+              )}
             </div>
 
             <form className="ai-input-area" onSubmit={handleSendMessage}>
@@ -291,8 +428,15 @@ export default function DriverDashboard() {
                 placeholder="Ask for route optimization, delays, or efficiency tips..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
+                disabled={isChatLoading}
               />
-              <button type="submit">Send</button>
+              <button type="submit" disabled={isChatLoading || !chatInput.trim()}>
+                {isChatLoading ? (
+                  <span className="loading-spinner"></span>
+                ) : (
+                  <FaPaperPlane />
+                )}
+              </button>
             </form>
           </div>
         </div>

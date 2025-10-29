@@ -7,6 +7,8 @@ import {
   FaRobot,
   FaTachometerAlt,
   FaLeaf,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import "./index.css";
 import ship from "./asessts/pexels-pixabay-68737.jpg";
@@ -202,9 +204,12 @@ function SignIn() {
 
 function LayoutWithNavbar() {
   const location = useLocation();
-  const hideNavbar =
-  location.pathname === "/dashboard/driver" ||
-  location.pathname === "/logistics-dashboard";
+  const hideNavbar = location.pathname === "/dashboard/driver";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <div className="app">
@@ -214,9 +219,16 @@ function LayoutWithNavbar() {
             <img src={logo} alt="HarborMind Logo" className="logo" />
             <h2 className="brand">HarborMind</h2>
           </div>
-          <div className="nav-right">
-            <Link to="/signin"><button className="sign-in">Sign In</button></Link>
-            <Link to="/get-started"><button className="get-started">Get Started</button></Link>
+          <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+          <div className={`nav-right ${mobileMenuOpen ? '' : 'mobile-hidden'}`}>
+            <Link to="/signin" onClick={() => setMobileMenuOpen(false)}>
+              <button className="sign-in">Sign In</button>
+            </Link>
+            <Link to="/get-started" onClick={() => setMobileMenuOpen(false)}>
+              <button className="get-started">Get Started</button>
+            </Link>
           </div>
         </nav>
       )}
