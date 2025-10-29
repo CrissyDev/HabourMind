@@ -37,13 +37,29 @@ function LogisticsDashboard() {
   });
   const [activeTab, setActiveTab] = useState("fleet");
   const [showInsights, setShowInsights] = useState(false);
-
   const [fleetData, setFleetData] = useState({
     activeTrucks: 156,
     totalDrivers: 189,
     avgFuelConsumption: 8.5,
     targetEfficiency: 90,
   });
+
+  // === AI Assistant state ===
+  const [messages, setMessages] = useState([
+    { sender: "bot", text: "Hello 👋! I'm your HarborMind AI Assistant. How can I help you today?" },
+  ]);
+  const [input, setInput] = useState("");
+
+  const handleSendMessage = () => {
+    if (input.trim() === "") return;
+    const newMessage = { sender: "user", text: input };
+    setMessages((prev) => [...prev, newMessage]);
+    setInput("");
+    setTimeout(() => {
+      const botReply = { sender: "bot", text: "Got it! I'll analyze and get back to you shortly." };
+      setMessages((prev) => [...prev, botReply]);
+    }, 1000);
+  };
 
   // Sample analytics data
   const analyticsData = [
@@ -62,7 +78,46 @@ function LogisticsDashboard() {
     { name: "Driver D", trips: 110, rating: 4.9 },
   ];
 
-  // Load manager data from localStorage
+  // ✅ Community data
+  const verifiedManagers = [
+    {
+      id: 1,
+      name: "Samuel Kariuki",
+      company: "TransAfrica Logistics",
+      location: "Nairobi, Kenya",
+      trustScore: 95,
+      rating: 4.9,
+      image: "https://images.pexels.com/photos/1181415/pexels-photo-1181415.jpeg",
+    },
+    {
+      id: 2,
+      name: "Amina Yusuf",
+      company: "Mombasa Cargo Movers",
+      location: "Mombasa, Kenya",
+      trustScore: 89,
+      rating: 4.7,
+      image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg",
+    },
+    {
+      id: 3,
+      name: "David Otieno",
+      company: "LakePort Hauliers",
+      location: "Kisumu, Kenya",
+      trustScore: 92,
+      rating: 4.8,
+      image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+    },
+  ];
+
+  const trustGrowthData = [
+    { month: "Jan", score: 80 },
+    { month: "Feb", score: 82 },
+    { month: "Mar", score: 85 },
+    { month: "Apr", score: 89 },
+    { month: "May", score: 91 },
+    { month: "Jun", score: 95 },
+  ];
+
   useEffect(() => {
     const data = localStorage.getItem("managerData");
     if (data) {
@@ -89,41 +144,21 @@ function LogisticsDashboard() {
       {/* === Navbar === */}
       <nav className="navbar fixed-navbar">
         <div className="logo-section">
-          <img
-            src="/assets/HarbourMindLogo.png"
-            alt="HarborMind Logo"
-            className="navbar-logo"
-          />
+          <img src="/assets/HarbourMindLogo.png" alt="HarborMind Logo" className="navbar-logo" />
           <span className="logo-text">HarborMind</span>
         </div>
 
         <div className="nav-links">
-          <a
-            href="#fleet"
-            onClick={() => setActiveTab("fleet")}
-            className={activeTab === "fleet" ? "active" : ""}
-          >
+          <a href="#fleet" onClick={() => setActiveTab("fleet")} className={activeTab === "fleet" ? "active" : ""}>
             <FaMapMarkedAlt className="nav-icon" /> Fleet Overview
           </a>
-          <a
-            href="#analytics"
-            onClick={() => setActiveTab("analytics")}
-            className={activeTab === "analytics" ? "active" : ""}
-          >
+          <a href="#analytics" onClick={() => setActiveTab("analytics")} className={activeTab === "analytics" ? "active" : ""}>
             <FaChartBar className="nav-icon" /> Analytics
           </a>
-          <a
-            href="#assistant"
-            onClick={() => setActiveTab("assistant")}
-            className={activeTab === "assistant" ? "active" : ""}
-          >
+          <a href="#assistant" onClick={() => setActiveTab("assistant")} className={activeTab === "assistant" ? "active" : ""}>
             <FaComments className="nav-icon" /> AI Assistant
           </a>
-          <a
-            href="#community"
-            onClick={() => setActiveTab("community")}
-            className={activeTab === "community" ? "active" : ""}
-          >
+          <a href="#community" onClick={() => setActiveTab("community")} className={activeTab === "community" ? "active" : ""}>
             <FaUsers className="nav-icon" /> Community
           </a>
         </div>
@@ -134,24 +169,16 @@ function LogisticsDashboard() {
             <span className="user-role">{manager.position || "Manager"}</span>
           </div>
           <div className="user-icon">
-            {manager.fullName
-              ? manager.fullName.charAt(0).toUpperCase()
-              : "M"}
+            {manager.fullName ? manager.fullName.charAt(0).toUpperCase() : "M"}
           </div>
-          <FiLogOut
-            className="logout-icon"
-            title="Logout"
-            onClick={handleLogout}
-          />
+          <FiLogOut className="logout-icon" title="Logout" onClick={handleLogout} />
         </div>
       </nav>
 
       {/* === Dashboard Content === */}
       <div className="dashboard-content">
         <h1 className="dashboard-title">
-          {manager.companyName
-            ? `${manager.companyName} Fleet Dashboard`
-            : "Fleet Management Dashboard"}
+          {manager.companyName ? `${manager.companyName} Fleet Dashboard` : "Fleet Management Dashboard"}
         </h1>
         <p className="welcome-text">
           Welcome, <span>{manager.fullName || "Manager"}</span>
@@ -191,40 +218,19 @@ function LogisticsDashboard() {
               <div className="performance-grid">
                 <div className="input-group">
                   <label>Active Trucks</label>
-                  <input
-                    type="number"
-                    name="activeTrucks"
-                    value={fleetData.activeTrucks}
-                    onChange={handleInputChange}
-                  />
+                  <input type="number" name="activeTrucks" value={fleetData.activeTrucks} onChange={handleInputChange} />
                 </div>
                 <div className="input-group">
                   <label>Total Drivers</label>
-                  <input
-                    type="number"
-                    name="totalDrivers"
-                    value={fleetData.totalDrivers}
-                    onChange={handleInputChange}
-                  />
+                  <input type="number" name="totalDrivers" value={fleetData.totalDrivers} onChange={handleInputChange} />
                 </div>
                 <div className="input-group">
                   <label>Avg Fuel Consumption (L/100km)</label>
-                  <input
-                    type="number"
-                    name="avgFuelConsumption"
-                    value={fleetData.avgFuelConsumption}
-                    onChange={handleInputChange}
-                    step="0.1"
-                  />
+                  <input type="number" name="avgFuelConsumption" value={fleetData.avgFuelConsumption} onChange={handleInputChange} step="0.1" />
                 </div>
                 <div className="input-group">
                   <label>Target Efficiency (%)</label>
-                  <input
-                    type="number"
-                    name="targetEfficiency"
-                    value={fleetData.targetEfficiency}
-                    onChange={handleInputChange}
-                  />
+                  <input type="number" name="targetEfficiency" value={fleetData.targetEfficiency} onChange={handleInputChange} />
                 </div>
               </div>
 
@@ -242,23 +248,18 @@ function LogisticsDashboard() {
                       <FaArrowUp className="positive" /> 17% improvement this week
                     </p>
                   </div>
-
                   <div className="insight-card">
                     <h4>Fuel Optimization</h4>
                     <p className="insight-text">
-                      <FaArrowDown className="positive" /> 8% reduction through
-                      route optimization
+                      <FaArrowDown className="positive" /> 8% reduction through route optimization
                     </p>
                   </div>
-
                   <div className="insight-card">
                     <h4>Carbon Footprint</h4>
                     <p className="insight-text">
-                      <FaArrowDown className="positive" /> 12 tons CO₂ saved this
-                      month
+                      <FaArrowDown className="positive" /> 12 tons CO₂ saved this month
                     </p>
                   </div>
-
                   <div className="insight-card">
                     <h4>Cost Savings</h4>
                     <p className="insight-text">
@@ -282,7 +283,6 @@ function LogisticsDashboard() {
             <h2 className="analytics-title">
               <FaChartBar className="analytics-icon" /> Fleet Analytics
             </h2>
-
             <div className="charts-container">
               <div className="chart-card">
                 <h3>Fleet Efficiency (Monthly)</h3>
@@ -293,13 +293,7 @@ function LogisticsDashboard() {
                     <YAxis stroke="#fff" />
                     <Tooltip />
                     <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="efficiency"
-                      stroke="#1e3a8a"
-                      strokeWidth={3}
-                      activeDot={{ r: 8 }}
-                    />
+                    <Line type="monotone" dataKey="efficiency" stroke="#1e3a8a" strokeWidth={3} activeDot={{ r: 8 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -332,6 +326,74 @@ function LogisticsDashboard() {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* === AI Assistant Section === */}
+        {activeTab === "assistant" && (
+          <div className="assistant-section">
+            <div className="chat-container">
+              <div className="chat-header">HarborMind AI Assistant</div>
+              <div className="chat-messages">
+                {messages.map((msg, index) => (
+                  <div key={index} className={`chat-bubble ${msg.sender === "user" ? "user-msg" : "bot-msg"}`}>
+                    {msg.text}
+                  </div>
+                ))}
+              </div>
+              <div className="chat-input-area">
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                />
+                <button onClick={handleSendMessage}>
+                  <FaPaperPlane />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* === Community Section === */}
+        {activeTab === "community" && (
+          <div className="community-section">
+            <h2 className="community-title">
+              <FaUsers className="community-icon" /> Logistics Community Network
+            </h2>
+
+            <div className="verified-managers">
+              {verifiedManagers.map((m) => (
+                <div key={m.id} className="manager-card">
+                  <img src={m.image} alt={m.name} className="manager-image" />
+                  <h3>{m.name}</h3>
+                  <p>{m.company}</p>
+                  <p className="manager-location">{m.location}</p>
+                  <p className="trust-score">Trust Score: {m.trustScore}%</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="match-section">
+              <h3>🤝 Match & Connect</h3>
+              <p>Find reliable partners in Kenya’s logistics ecosystem.</p>
+              <button className="connect-btn">Find Matches</button>
+            </div>
+
+            <div className="trust-board">
+              <h3>Trust Growth Board</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={trustGrowthData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                  <XAxis dataKey="month" stroke="#fff" />
+                  <YAxis stroke="#fff" />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="score" stroke="#0077b6" strokeWidth={3} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         )}
