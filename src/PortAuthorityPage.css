@@ -1,0 +1,104 @@
+body {
+  background-color: #ffffff; /* plain white background */
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.port-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 100px; /* space between navbar and form */
+  background-color: #ffffff;
+}
+
+.port-container {
+  background-color: #0a1f44; /* same dark blue form color as inspo */
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  width: 420px;
+  padding: 2.5rem 2.5rem;
+  color: white;
+}
+
+.port-form h2 {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #cdd4e0;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #e0e6f0;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #33406e;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background-color: #1b2550;
+  color: #ffffff;
+  transition: border-color 0.3s;
+}
+
+input::placeholder {
+  color: #a9b3d3;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #0d1b4c;
+}
+
+.error {
+  color: #ff5b5b;
+  font-size: 0.8rem;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.signin-text {
+  text-align: center;
+  margin-top: 1rem;
+  color: #cdd4e0;
+}
+
+.signin-text a {
+  color: #4dabff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signin-text a:hover {
+  text-decoration: underline;
+}

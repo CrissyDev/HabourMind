@@ -18,6 +18,8 @@ import TruckDriverPage from "./TruckDriverPage";
 import DriverDashboard from "./DriverDashboard";
 import LogisticsManagerRegistration from "./LogisticsManagerRegistration";
 import LogisticsDashboard from "./LogisticsDashboard";
+import PortAuthorityPage from "./PortAuthorityPage";
+import PortAuthorityDashboard from "./PortAuthorityDashboard";
 
 
 
@@ -204,7 +206,10 @@ function SignIn() {
 
 function LayoutWithNavbar() {
   const location = useLocation();
-  const hideNavbar = location.pathname === "/dashboard/driver";
+  const hideNavbar =
+    location.pathname === "/dashboard/driver" ||
+    location.pathname === "/portauthority-dashboard" ||
+    location.pathname === "/logistics-dashboard";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -240,7 +245,8 @@ function LayoutWithNavbar() {
         <Route path="/dashboard/driver" element={<DriverDashboard />} />
         <Route path="/logistics-manager" element={<LogisticsManagerRegistration />} />
         <Route path="/logistics-dashboard" element={<LogisticsDashboard />} />
-
+        <Route path="/port-authority" element={<PortAuthorityPage />} />
+        <Route path="/portauthority-dashboard" element={<PortAuthorityDashboard />} />
       </Routes>
     </div>
   );
