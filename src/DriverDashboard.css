@@ -11,6 +11,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
+  position: relative;
+  z-index: 100;
 }
 
 .nav-left {
@@ -683,6 +685,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .ai-header {
@@ -1018,6 +1022,46 @@
   }
 }
 
+/* === SPEECH ERROR MESSAGE === */
+.speech-error-message {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0.5rem 1rem 1rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.speech-info-message {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  color: #93c5fd;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0.5rem 1rem 1rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 1024px) {
   .dashboard-body {
@@ -1131,6 +1175,61 @@
     padding: 0.9rem 1.2rem;
     font-size: 0.9rem;
   }
+
+  .ai-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .ai-header p {
+    font-size: 0.95rem;
+  }
+
+  .ai-header-content {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .clear-chat-btn {
+    align-self: center;
+    font-size: 0.85rem;
+    padding: 0.7rem 1rem;
+  }
+
+  .ai-input-area {
+    padding: 0.75rem;
+    flex-wrap: nowrap;
+  }
+
+  .ai-input-area input {
+    font-size: 0.9rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .mic-button {
+    padding: 0 1rem;
+    font-size: 1rem;
+  }
+
+  .ai-input-area button[type="submit"] {
+    padding: 0 1.2rem;
+  }
+
+  .ai-message {
+    max-width: 90%;
+    font-size: 0.9rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .ai-message.bot::before,
+  .ai-message.user::after {
+    display: none;
+  }
+
+  .tts-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1238,21 +1337,86 @@
 
   .ai-chat-window {
     width: 95%;
-    height: 55vh;
-    padding: 12px;
+    height: calc(100vh - 200px);
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .ai-assistant-container {
+    padding: 1rem 0.5rem;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .ai-header {
+    margin-bottom: 1rem;
+    width: 100%;
   }
 
   .ai-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 
   .ai-header p {
-    font-size: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .ai-header-content {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .clear-chat-btn {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+  }
+
+  .ai-chat-messages {
+    padding: 0.75rem;
+    min-height: 200px;
+    margin-bottom: 1rem;
+  }
+
+  .ai-input-area {
+    padding: 0.5rem;
+    border-radius: 0 0 16px 16px;
   }
 
   .ai-input-area input {
-    padding: 12px;
+    padding: 0.75rem 0.85rem;
+    font-size: 0.85rem;
+    border-radius: 8px 0 0 8px;
+  }
+
+  .mic-button {
+    padding: 0 0.85rem;
     font-size: 0.9rem;
+    border-radius: 8px 0 0 8px;
+  }
+
+  .ai-input-area button[type="submit"] {
+    padding: 0 1rem;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .ai-message {
+    max-width: 95%;
+    font-size: 0.85rem;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .speech-error-message {
+    margin: 0.5rem 0.5rem 0.75rem 0.5rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .tts-button {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.85rem;
   }
 
   .ai-input-area button {

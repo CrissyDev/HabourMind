@@ -52,6 +52,7 @@ export default function DriverDashboard() {
   const { 
     isListening, 
     transcript, 
+    error: speechError,
     startListening, 
     stopListening, 
     resetTranscript,
@@ -453,20 +454,20 @@ export default function DriverDashboard() {
                 <h1>AI Assistant</h1>
                 <p>Get real-time insights and route optimization</p>
               </div>
-              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
-                <FaTrash />
-                Clear Chat
-              </button>
             </div>
           </div>
 
           <div className="ai-chat-window">
-            <div className="ai-buttons">
+            {/* <div className="ai-buttons">
               <button> Optimize Route</button>
               <button> Fuel Efficiency</button>
               <button> Check Delays</button>
               <button> Efficiency Report</button>
-            </div>
+            </div> */}
+              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
+                <FaTrash />
+                Clear Chat
+              </button>
 
             <div className="ai-chat-messages">
               {chatMessages.map((msg, idx) => (
@@ -530,6 +531,16 @@ export default function DriverDashboard() {
                 )}
               </button>
             </form>
+            {speechError && (
+              <div className="speech-error-message">
+                <FaExclamationTriangle /> {speechError}
+              </div>
+            )}
+            {!speechSupported && (
+              <div className="speech-info-message">
+                <FaExclamationTriangle /> Voice input is not supported in this browser. Voice features work best on Chrome/Edge (desktop/Android). You can still type your messages!
+              </div>
+            )}
           </div>
         </div>
       )}
