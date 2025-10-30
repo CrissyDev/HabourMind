@@ -3,6 +3,8 @@ import ReactMarkdown from "react-markdown";
 import "./DriverDashboard.css";
 import logo from "./asessts/HabourMind Logo.png";
 import { generateTripRecommendations, geminiChat } from "./geminiService";
+import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
+import { useTextToSpeech } from "./hooks/useTextToSpeech";
 import { 
   FaTruck, 
   FaGasPump, 
@@ -13,7 +15,10 @@ import {
   FaClock,
   FaExclamationTriangle,
   FaTrash,
-  FaPaperPlane
+  FaPaperPlane,
+  FaMicrophone,
+  FaStop,
+  FaVolumeUp
 } from "react-icons/fa";
 
 export default function DriverDashboard() {
@@ -41,11 +46,38 @@ export default function DriverDashboard() {
   ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [isVoiceInput, setIsVoiceInput] = useState(false);
+  
+  // Voice recognition and TTS hooks
+  const { 
+    isListening, 
+    transcript, 
+    error: speechError,
+    startListening, 
+    stopListening, 
+    resetTranscript,
+    isSupported: speechSupported 
+  } = useSpeechRecognition();
+  
+  const { 
+    speak, 
+    stop: stopSpeaking, 
+    isSpeaking,
+    isSupported: ttsSupported 
+  } = useTextToSpeech();
 
   useEffect(() => {
     const storedDriver = JSON.parse(localStorage.getItem("driverData"));
     if (storedDriver) setDriverData(storedDriver);
   }, []);
+
+  // Handle voice transcript when recording completes
+  useEffect(() => {
+    if (transcript && !isListening) {
+      setChatInput(transcript);
+      setIsVoiceInput(true);
+    }
+  }, [transcript, isListening]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,22 +125,36 @@ export default function DriverDashboard() {
     if (!chatInput.trim() || isChatLoading) return;
     
     const userMessage = chatInput;
-    const newMsg = { sender: "user", text: userMessage };
+    const wasVoiceInput = isVoiceInput;
+    
+    const newMsg = { 
+      sender: "user", 
+      text: userMessage,
+      isVoiceInitiated: wasVoiceInput
+    };
     setChatMessages((prev) => [...prev, newMsg]);
     setChatInput("");
     setIsChatLoading(true);
+    
+    // Reset voice input and transcript for next message
+    if (wasVoiceInput) {
+      resetTranscript();
+      setIsVoiceInput(false);
+    }
 
     try {
       const response = await geminiChat.sendMessage(userMessage);
       const botReply = {
         sender: "bot",
         text: response,
+        isVoiceInitiated: wasVoiceInput
       };
       setChatMessages((prev) => [...prev, botReply]);
     } catch (error) {
       const errorReply = {
         sender: "bot",
         text: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+        isVoiceInitiated: false
       };
       setChatMessages((prev) => [...prev, errorReply]);
       console.error('Chat error:', error);
@@ -123,8 +169,32 @@ export default function DriverDashboard() {
       {
         sender: "bot",
         text: "### Welcome to HarborMind AI! 🚛\n\nHello! I'm **HarborMind AI**, your intelligent logistics assistant. I'm here to help you with:\n\n* **Route optimization** and traffic analysis\n* **Weather conditions** and safety assessments  \n* **Fuel efficiency** recommendations\n* **Port logistics** and clearance guidance\n* **Real-time insights** for Kenyan transportation\n\nI specialize in **Mombasa Port operations** and transportation throughout Kenya. How can I assist you today?",
+        isVoiceInitiated: false
       },
     ]);
+    // Reset voice states
+    resetTranscript();
+    setIsVoiceInput(false);
+    if (isListening) {
+      stopListening();
+    }
+    if (isSpeaking) {
+      stopSpeaking();
+    }
+  };
+
+  const handleMicClick = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+      setChatInput(""); // Clear any manual input when starting voice
+    }
+  };
+
+  const handleManualInput = (e) => {
+    setChatInput(e.target.value);
+    setIsVoiceInput(false); // Mark as manual input
   };
 
   return (
@@ -384,20 +454,20 @@ export default function DriverDashboard() {
                 <h1>AI Assistant</h1>
                 <p>Get real-time insights and route optimization</p>
               </div>
-              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
-                <FaTrash />
-                Clear Chat
-              </button>
             </div>
           </div>
 
           <div className="ai-chat-window">
-            <div className="ai-buttons">
+            {/* <div className="ai-buttons">
               <button> Optimize Route</button>
               <button> Fuel Efficiency</button>
               <button> Check Delays</button>
               <button> Efficiency Report</button>
-            </div>
+            </div> */}
+              <button className="clear-chat-btn" onClick={handleClearChat} title="Clear Chat">
+                <FaTrash />
+                Clear Chat
+              </button>
 
             <div className="ai-chat-messages">
               {chatMessages.map((msg, idx) => (
@@ -407,10 +477,22 @@ export default function DriverDashboard() {
                     msg.sender === "user" ? "user" : "bot"
                   }`}
                 >
-                  {msg.sender === "bot" ? (
-                    <ReactMarkdown>{msg.text}</ReactMarkdown>
-                  ) : (
-                    msg.text
+                  <div className="message-content">
+                    {msg.sender === "bot" ? (
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    ) : (
+                      msg.text
+                    )}
+                  </div>
+                  {msg.sender === "bot" && msg.isVoiceInitiated && ttsSupported && (
+                    <button
+                      className={`tts-button ${isSpeaking ? 'speaking' : ''}`}
+                      onClick={() => speak(msg.text, 'sw-KE')}
+                      disabled={isSpeaking}
+                      title="Listen to response in Swahili"
+                    >
+                      <FaVolumeUp />
+                    </button>
                   )}
                 </div>
               ))}
@@ -423,12 +505,23 @@ export default function DriverDashboard() {
             </div>
 
             <form className="ai-input-area" onSubmit={handleSendMessage}>
+              {speechSupported && (
+                <button 
+                  type="button" 
+                  className={`mic-button ${isListening ? 'listening' : ''}`}
+                  onClick={handleMicClick}
+                  disabled={isChatLoading}
+                  title={isListening ? "Stop recording" : "Start voice input (Swahili)"}
+                >
+                  {isListening ? <FaStop /> : <FaMicrophone />}
+                </button>
+              )}
               <input
                 type="text"
-                placeholder="Ask for route optimization, delays, or efficiency tips..."
+                placeholder={isListening ? "Listening in Swahili..." : "Ask for route optimization, delays, or efficiency tips..."}
                 value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                disabled={isChatLoading}
+                onChange={handleManualInput}
+                disabled={isChatLoading || isListening}
               />
               <button type="submit" disabled={isChatLoading || !chatInput.trim()}>
                 {isChatLoading ? (
@@ -438,6 +531,16 @@ export default function DriverDashboard() {
                 )}
               </button>
             </form>
+            {speechError && (
+              <div className="speech-error-message">
+                <FaExclamationTriangle /> {speechError}
+              </div>
+            )}
+            {!speechSupported && (
+              <div className="speech-info-message">
+                <FaExclamationTriangle /> Voice input is not supported in this browser. Voice features work best on Chrome/Edge (desktop/Android). You can still type your messages!
+              </div>
+            )}
           </div>
         </div>
       )}
